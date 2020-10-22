@@ -8,10 +8,7 @@ import io.zeebe.exporter.proto.Schema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -108,7 +105,7 @@ public class ZeebeHazelcast implements AutoCloseable {
     try {
       final byte[] item = ringbuffer.readOne(sequence);
 
-      final var genericRecord = Schema.Record.parseFrom(item);
+      final Schema.Record genericRecord = Schema.Record.parseFrom(item);
       handleRecord(genericRecord);
 
       sequence += 1;
@@ -126,7 +123,7 @@ public class ZeebeHazelcast implements AutoCloseable {
       // StaleSequenceException is thrown. It is up to the caller to deal with this particular
       // situation, e.g. throw an Exception or restart from the last known head. That is why the
       // StaleSequenceException contains the last known head.
-      final var headSequence = e.getHeadSeq();
+      final long headSequence = e.getHeadSeq();
       LOGGER.warn(
               "Fail to read from ring-buffer at sequence '{}'. The sequence is reported as stale. Continue with new head sequence at '{}'",
               sequence,
@@ -137,7 +134,7 @@ public class ZeebeHazelcast implements AutoCloseable {
 
     } catch (IllegalArgumentException e) {
       // if sequence is smaller than 0 or larger than tailSequence()+1
-      final var headSequence = ringbuffer.headSequence();
+      final long headSequence = ringbuffer.headSequence();
       LOGGER.warn(
               "Fail to read from ring-buffer at sequence '{}'. Continue with head sequence at '{}'",
               sequence,
@@ -160,7 +157,7 @@ public class ZeebeHazelcast implements AutoCloseable {
 
   private void handleRecord(Schema.Record genericRecord) throws InvalidProtocolBufferException {
     for (Class<? extends com.google.protobuf.Message> type : RECORD_MESSAGE_TYPES) {
-      final var handled = handleRecord(genericRecord, type);
+      final boolean handled = handleRecord(genericRecord, type);
       if (handled) {
         return;
       }
@@ -171,10 +168,10 @@ public class ZeebeHazelcast implements AutoCloseable {
           Schema.Record genericRecord, Class<T> t) throws InvalidProtocolBufferException {
 
     if (genericRecord.getRecord().is(t)) {
-      final var record = genericRecord.getRecord().unpack(t);
+      final T record = genericRecord.getRecord().unpack(t);
 
       listeners
-              .getOrDefault(t, List.of())
+              .getOrDefault(t, Collections.emptyList() )
               .forEach(listener -> ((Consumer<T>) listener).accept(record));
 
       return true;
@@ -239,7 +236,7 @@ public class ZeebeHazelcast implements AutoCloseable {
 
     private <T extends com.google.protobuf.Message> void addListener(
             Class<T> recordType, Consumer<T> listener) {
-      final var recordListeners = listeners.getOrDefault(recordType, new ArrayList<>());
+      final List recordListeners = listeners.getOrDefault(recordType, new ArrayList<>());
       recordListeners.add(listener);
       listeners.put(recordType, recordListeners);
     }
@@ -326,8 +323,8 @@ public class ZeebeHazelcast implements AutoCloseable {
 
     private long getSequence(Ringbuffer<?> ringbuffer) {
 
-      final var headSequence = ringbuffer.headSequence();
-      final var tailSequence = ringbuffer.tailSequence();
+      final long headSequence = ringbuffer.headSequence();
+      final long tailSequence = ringbuffer.tailSequence();
 
       if (readFromSequence > 0) {
         if (readFromSequence > (tailSequence + 1)) {
@@ -375,7 +372,7 @@ public class ZeebeHazelcast implements AutoCloseable {
       final long sequence = getSequence(ringbuffer);
       LOGGER.info("Read from ringbuffer '{}' starting from sequence '{}'", name, sequence);
 
-      final var zeebeHazelcast =
+      final ZeebeHazelcast zeebeHazelcast =
               new ZeebeHazelcast(ringbuffer, sequence, listeners, postProcessListener);
       zeebeHazelcast.start();
 

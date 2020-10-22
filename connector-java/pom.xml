@@ -4,6 +4,7 @@
 	<name>Zeebe Hazelcast Connector</name>
 	<artifactId>zeebe-hazelcast-connector</artifactId>
 	<packaging>jar</packaging>
+	<version>0.10.1.1-SNAPSHOT</version>
 
 	<parent>
 		<groupId>io.zeebe.hazelcast</groupId>
@@ -51,6 +52,7 @@
 		<dependency>
 			<groupId>io.zeebe.hazelcast</groupId>
 			<artifactId>zeebe-hazelcast-exporter</artifactId>
+			<version>0.10.1-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
 
