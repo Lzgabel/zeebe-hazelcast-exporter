@@ -18,11 +18,12 @@
     <properties>
         <version.zeebe>0.24.4</version.zeebe>
         <version.hazelcast>4.0.3</version.hazelcast>
-        <version.exporter.protobuf>0.11.0</version.exporter.protobuf>
+        <version.exporter.protobuf>0.12.0.1-SNAPSHOT</version.exporter.protobuf>
         <version.log4j>2.13.3</version.log4j>
 
         <!-- release parent settings -->
-        <version.java>11</version.java>
+        <!--<version.java>11</version.java>-->
+        <version.java>8</version.java>
         <nexus.snapshot.repository>https://app.camunda.com/nexus/content/repositories/zeebe-io-snapshots/
         </nexus.snapshot.repository>
         <nexus.release.repository>https://app.camunda.com/nexus/content/repositories/zeebe-io/
@@ -101,9 +102,9 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
-                <configuration>
+                <!--<configuration>
                     <release>11</release>
-                </configuration>
+                </configuration>-->
             </plugin>
 
             <plugin>

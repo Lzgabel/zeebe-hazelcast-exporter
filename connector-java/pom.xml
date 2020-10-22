@@ -59,6 +59,7 @@
 		<dependency>
 			<groupId>io.zeebe</groupId>
 			<artifactId>zeebe-exporter-protobuf</artifactId>
+			<version>0.12.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 
