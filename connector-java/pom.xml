@@ -12,6 +12,10 @@
 		<version>0.10.1-SNAPSHOT</version>
 	</parent>
 
+	<properties>
+		<version.java>8</version.java>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>com.hazelcast</groupId>

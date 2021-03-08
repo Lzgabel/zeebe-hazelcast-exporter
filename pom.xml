@@ -22,8 +22,8 @@
         <version.log4j>2.13.3</version.log4j>
 
         <!-- release parent settings -->
-        <!--<version.java>11</version.java>-->
-        <version.java>8</version.java>
+        <version.java>11</version.java>
+        <!--<version.java>8</version.java>-->
         <nexus.snapshot.repository>https://app.camunda.com/nexus/content/repositories/zeebe-io-snapshots/
         </nexus.snapshot.repository>
         <nexus.release.repository>https://app.camunda.com/nexus/content/repositories/zeebe-io/
