@@ -5,7 +5,7 @@
     <name>Zeebe Hazelcast Root</name>
     <groupId>io.zeebe.hazelcast</groupId>
     <artifactId>root</artifactId>
-    <version>0.10.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>pom</packaging>
 
     <parent>
@@ -17,14 +17,13 @@
     </parent>
 
     <properties>
-        <version.zeebe>0.26.1</version.zeebe>
+        <version.zeebe>1.0.0</version.zeebe>
         <version.hazelcast>4.1.2</version.hazelcast>
-        <version.exporter.protobuf>0.11.0</version.exporter.protobuf>
+        <version.exporter.protobuf>xhzy-1.0.0</version.exporter.protobuf>
         <version.log4j>2.14.1</version.log4j>
 
         <!-- release parent settings -->
         <version.java>11</version.java>
-        <!--<version.java>8</version.java>-->
         <nexus.snapshot.repository>https://app.camunda.com/nexus/content/repositories/zeebe-io-snapshots/
         </nexus.snapshot.repository>
         <nexus.release.repository>https://app.camunda.com/nexus/content/repositories/zeebe-io/
@@ -54,7 +53,7 @@
             </dependency>
 
             <dependency>
-                <groupId>io.zeebe</groupId>
+                <groupId>io.camunda</groupId>
                 <artifactId>zeebe-bom</artifactId>
                 <version>${version.zeebe}</version>
                 <scope>import</scope>
@@ -103,9 +102,9 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
-                <!--<configuration>
+                <configuration>
                     <release>11</release>
-                </configuration>-->
+                </configuration>
             </plugin>
 
             <plugin>
@@ -174,6 +173,17 @@
             </snapshots>
         </repository>
     </repositories>
+
+    <distributionManagement>
+        <repository>
+            <id>private-releases</id>
+            <url>http://116.62.222.54/repository/maven-releases</url>
+        </repository>
+        <snapshotRepository>
+            <id>private-snapshots</id>
+            <url>http://116.62.222.54/repository/maven-snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
 
     <scm>
         <url>https://github.com/camunda-community-hub/zeebe-hazelcast-exporter</url>

@@ -4,11 +4,11 @@ import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.ringbuffer.Ringbuffer;
-import io.zeebe.client.ZeebeClient;
+import io.camunda.zeebe.client.ZeebeClient;
 import io.zeebe.hazelcast.exporter.ExporterConfiguration;
-import io.zeebe.model.bpmn.Bpmn;
-import io.zeebe.model.bpmn.BpmnModelInstance;
-import io.zeebe.test.ZeebeTestRule;
+import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
+import io.camunda.zeebe.test.ZeebeTestRule;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -57,16 +57,16 @@ public class ExporterJsonTest {
         // given
         final Ringbuffer<byte[]> buffer = hz.getRingbuffer(CONFIGURATION.getName());
 
-        var sequence = buffer.headSequence();
+        long sequence = buffer.headSequence();
 
         // when
-        client.newDeployCommand().addWorkflowModel(WORKFLOW, "process.bpmn").send().join();
+        client.newDeployCommand().addProcessModel(WORKFLOW, "process.bpmn").send().join();
 
         // then
-        final var message = buffer.readOne(sequence);
+        final byte[] message = buffer.readOne(sequence);
         assertThat(message).isNotNull();
 
-        final var jsonRecord = new String(message);
+        final String jsonRecord = new String(message);
 
         assertThat(jsonRecord)
                 .startsWith("{")

@@ -9,13 +9,13 @@
     <parent>
         <groupId>io.zeebe.hazelcast</groupId>
         <artifactId>root</artifactId>
-        <version>0.10.1-SNAPSHOT</version>
+        <version>1.0.0</version>
     </parent>
 
     <dependencies>
 
         <dependency>
-            <groupId>io.zeebe</groupId>
+            <groupId>io.camunda</groupId>
             <artifactId>zeebe-exporter-api</artifactId>
             <scope>provided</scope>
         </dependency>
@@ -56,8 +56,9 @@
         </dependency>
 
         <dependency>
-            <groupId>io.zeebe</groupId>
+            <groupId>io.camunda</groupId>
             <artifactId>zeebe-test</artifactId>
+            <version>1.0.0</version>
             <scope>test</scope>
         </dependency>
 
@@ -98,51 +99,51 @@
                 </executions>
             </plugin>
 
-            <plugin>
-                <groupId>com.google.cloud.tools</groupId>
-                <artifactId>jib-maven-plugin</artifactId>
-                <version>3.0.0</version>
-                <executions>
-                    <execution>
-                        <phase>deploy</phase>
-                        <goals>
-                            <goal>build</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <from>
-                        <image>docker.io/camunda/zeebe:${version.zeebe}</image>
-                    </from>
-                    <to>
-                        <image>ghcr.io/camunda-community-hub/zeebe-with-hazelcast-exporter</image>
-                        <tags>${dockerTags}</tags>
-                    </to>
-                    <container>
-                        <entrypoint>INHERIT</entrypoint>
-                        <ports>
-                            <port>26500</port>
-                            <port>9600</port>
-                            <port>5701</port>
-                        </ports>
-                        <environment>
-                            <ZEEBE_BROKER_EXPORTERS_HAZELCAST_CLASSNAME>io.zeebe.hazelcast.exporter.HazelcastExporter
-                            </ZEEBE_BROKER_EXPORTERS_HAZELCAST_CLASSNAME>
-                            <ZEEBE_BROKER_EXPORTERS_HAZELCAST_JARPATH>
-                                exporters/zeebe-hazelcast-exporter-jar-with-dependencies.jar
-                            </ZEEBE_BROKER_EXPORTERS_HAZELCAST_JARPATH>
-                        </environment>
-                    </container>
-                    <extraDirectories>
-                        <paths>
-                            <path>
-                                <from>${project.build.directory}/jib</from>
-                                <into>/usr/local/zeebe/exporters</into>
-                            </path>
-                        </paths>
-                    </extraDirectories>
-                </configuration>
-            </plugin>
+<!--            <plugin>-->
+<!--                <groupId>com.google.cloud.tools</groupId>-->
+<!--                <artifactId>jib-maven-plugin</artifactId>-->
+<!--                <version>3.0.0</version>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <phase>deploy</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>build</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--                <configuration>-->
+<!--                    <from>-->
+<!--                        <image>docker.io/camunda/zeebe:${version.zeebe}</image>-->
+<!--                    </from>-->
+<!--                    <to>-->
+<!--                        <image>ghcr.io/camunda-community-hub/zeebe-with-hazelcast-exporter</image>-->
+<!--                        <tags>${dockerTags}</tags>-->
+<!--                    </to>-->
+<!--                    <container>-->
+<!--                        <entrypoint>INHERIT</entrypoint>-->
+<!--                        <ports>-->
+<!--                            <port>26500</port>-->
+<!--                            <port>9600</port>-->
+<!--                            <port>5701</port>-->
+<!--                        </ports>-->
+<!--                        <environment>-->
+<!--                            <ZEEBE_BROKER_EXPORTERS_HAZELCAST_CLASSNAME>io.zeebe.hazelcast.exporter.HazelcastExporter-->
+<!--                            </ZEEBE_BROKER_EXPORTERS_HAZELCAST_CLASSNAME>-->
+<!--                            <ZEEBE_BROKER_EXPORTERS_HAZELCAST_JARPATH>-->
+<!--                                exporters/zeebe-hazelcast-exporter-jar-with-dependencies.jar-->
+<!--                            </ZEEBE_BROKER_EXPORTERS_HAZELCAST_JARPATH>-->
+<!--                        </environment>-->
+<!--                    </container>-->
+<!--                    <extraDirectories>-->
+<!--                        <paths>-->
+<!--                            <path>-->
+<!--                                <from>${project.build.directory}/jib</from>-->
+<!--                                <into>/usr/local/zeebe/exporters</into>-->
+<!--                            </path>-->
+<!--                        </paths>-->
+<!--                    </extraDirectories>-->
+<!--                </configuration>-->
+<!--            </plugin>-->
         </plugins>
     </build>
 

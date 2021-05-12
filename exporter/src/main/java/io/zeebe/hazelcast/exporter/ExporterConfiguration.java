@@ -49,9 +49,9 @@ public class ExporterConfiguration {
   }
 
   public Optional<String> getRemoteAddress() {
-    return getEnv("REMOTE_ADDRESS")
-            .or(() -> Optional.ofNullable(remoteAddress))
-            .filter(remoteAddress -> !remoteAddress.isEmpty());
+    Optional<String> env = getEnv("REMOTE_ADDRESS");
+    Optional<String> optional = env.isPresent() ? env : Optional.ofNullable(remoteAddress);
+    return optional.filter(remoteAddress -> !remoteAddress.isEmpty());
   }
 
   private Optional<String> getEnv(String name) {
