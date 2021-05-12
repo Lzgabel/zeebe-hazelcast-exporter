@@ -7,11 +7,11 @@ import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.ringbuffer.Ringbuffer;
 import io.camunda.zeebe.client.ZeebeClient;
-import io.zeebe.exporter.proto.Schema;
-import io.zeebe.hazelcast.exporter.ExporterConfiguration;
 import io.camunda.zeebe.model.bpmn.Bpmn;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.test.ZeebeTestRule;
+import io.zeebe.exporter.proto.Schema;
+import io.zeebe.hazelcast.exporter.ExporterConfiguration;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -24,18 +24,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class RemoteExporterTest {
 
   private static final BpmnModelInstance WORKFLOW =
-          Bpmn.createExecutableProcess("process")
-                  .startEvent("start")
-                  .sequenceFlowId("to-task")
-                  .serviceTask("task", s -> s.zeebeJobType("test"))
-                  .sequenceFlowId("to-end")
-                  .endEvent("end")
-                  .done();
+      Bpmn.createExecutableProcess("process")
+          .startEvent("start")
+          .sequenceFlowId("to-task")
+          .serviceTask("task", s -> s.zeebeJobType("test"))
+          .sequenceFlowId("to-end")
+          .endEvent("end")
+          .done();
 
   private static final ExporterConfiguration CONFIGURATION = new ExporterConfiguration();
 
   @Rule
-  public final ZeebeTestRule testRule = new ZeebeTestRule("application-remote.yaml", Properties::new);
+  public final ZeebeTestRule testRule =
+      new ZeebeTestRule("application-remote.yaml", Properties::new);
 
   private ZeebeClient client;
   private HazelcastInstance hzInstance;
@@ -65,19 +66,19 @@ public class RemoteExporterTest {
     // given
     final Ringbuffer<byte[]> buffer = hzClient.getRingbuffer(CONFIGURATION.getName());
 
-    long sequence = buffer.headSequence();
+    var sequence = buffer.headSequence();
 
     // when
     client.newDeployCommand().addProcessModel(WORKFLOW, "process.bpmn").send().join();
 
     // then
-    final byte[] message = buffer.readOne(sequence);
+    final var message = buffer.readOne(sequence);
     assertThat(message).isNotNull();
 
-    final Schema.Record record = Schema.Record.parseFrom(message);
+    final var record = Schema.Record.parseFrom(message);
     assertThat(record.getRecord().is(Schema.DeploymentRecord.class)).isTrue();
 
-    final Schema.DeploymentRecord deploymentRecord = record.getRecord().unpack(Schema.DeploymentRecord.class);
+    final var deploymentRecord = record.getRecord().unpack(Schema.DeploymentRecord.class);
     final Schema.DeploymentRecord.Resource resource = deploymentRecord.getResources(0);
     assertThat(resource.getResourceName()).isEqualTo("process.bpmn");
   }

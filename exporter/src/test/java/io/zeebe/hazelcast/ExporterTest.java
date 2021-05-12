@@ -5,11 +5,11 @@ import com.hazelcast.client.config.ClientConfig;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.ringbuffer.Ringbuffer;
 import io.camunda.zeebe.client.ZeebeClient;
-import io.zeebe.exporter.proto.Schema;
-import io.zeebe.hazelcast.exporter.ExporterConfiguration;
 import io.camunda.zeebe.model.bpmn.Bpmn;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.test.ZeebeTestRule;
+import io.zeebe.exporter.proto.Schema;
+import io.zeebe.hazelcast.exporter.ExporterConfiguration;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -23,9 +23,9 @@ public class ExporterTest {
 
   private static final BpmnModelInstance WORKFLOW =
       Bpmn.createExecutableProcess("process")
-              .startEvent("start")
-              .sequenceFlowId("to-task")
-              .serviceTask("task", s -> s.zeebeJobType("test"))
+          .startEvent("start")
+          .sequenceFlowId("to-task")
+          .serviceTask("task", s -> s.zeebeJobType("test"))
           .sequenceFlowId("to-end")
           .endEvent("end")
           .done();
@@ -57,19 +57,19 @@ public class ExporterTest {
     // given
     final Ringbuffer<byte[]> buffer = hz.getRingbuffer(CONFIGURATION.getName());
 
-    long sequence = buffer.headSequence();
+    var sequence = buffer.headSequence();
 
     // when
     client.newDeployCommand().addProcessModel(WORKFLOW, "process.bpmn").send().join();
 
     // then
-    final byte[] message = buffer.readOne(sequence);
+    final var message = buffer.readOne(sequence);
     assertThat(message).isNotNull();
 
-    final Schema.Record record = Schema.Record.parseFrom(message);
+    final var record = Schema.Record.parseFrom(message);
     assertThat(record.getRecord().is(Schema.DeploymentRecord.class)).isTrue();
 
-    final Schema.DeploymentRecord deploymentRecord = record.getRecord().unpack(Schema.DeploymentRecord.class);
+    final var deploymentRecord = record.getRecord().unpack(Schema.DeploymentRecord.class);
     final Schema.DeploymentRecord.Resource resource = deploymentRecord.getResources(0);
     assertThat(resource.getResourceName()).isEqualTo("process.bpmn");
   }
