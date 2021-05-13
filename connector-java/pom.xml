@@ -10,7 +10,7 @@
 	<parent>
 		<groupId>io.zeebe.hazelcast</groupId>
 		<artifactId>root</artifactId>
-		<version>1.0.0</version>
+		<version>xhzy-1.0.0</version>
 	</parent>
 
 	<properties>
@@ -51,21 +51,21 @@
 		<dependency>
 			<groupId>io.camunda</groupId>
 			<artifactId>zeebe-test</artifactId>
-			<version>1.0.0</version>
+			<version>xhzy-1.0.0</version>
 			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>io.zeebe.hazelcast</groupId>
 			<artifactId>zeebe-hazelcast-exporter</artifactId>
-			<version>1.0.0</version>
+			<version>xhzy-1.0.0</version>
 			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>io.zeebe</groupId>
 			<artifactId>zeebe-exporter-protobuf</artifactId>
-			<version>1.0.0</version>
+			<version>xhzy-1.0.0</version>
 		</dependency>
 
 		<dependency>

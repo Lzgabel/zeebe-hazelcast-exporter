@@ -5,7 +5,7 @@
     <name>Zeebe Hazelcast Root</name>
     <groupId>io.zeebe.hazelcast</groupId>
     <artifactId>root</artifactId>
-    <version>1.0.0</version>
+    <version>xhzy-1.0.0</version>
     <packaging>pom</packaging>
 
     <parent>
@@ -17,7 +17,7 @@
     </parent>
 
     <properties>
-        <version.zeebe>1.0.0</version.zeebe>
+        <version.zeebe>xhzy-1.0.0</version.zeebe>
         <version.hazelcast>4.1.2</version.hazelcast>
         <version.exporter.protobuf>xhzy-1.0.0</version.exporter.protobuf>
         <version.log4j>2.14.1</version.log4j>

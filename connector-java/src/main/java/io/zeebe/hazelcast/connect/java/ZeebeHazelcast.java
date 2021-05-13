@@ -171,7 +171,7 @@ public class ZeebeHazelcast implements AutoCloseable {
       final T record = genericRecord.getRecord().unpack(t);
 
       listeners
-          .getOrDefault(t, List.of())
+          .getOrDefault(t, new ArrayList<>())
           .forEach(listener -> ((Consumer<T>) listener).accept(record));
 
       return true;
