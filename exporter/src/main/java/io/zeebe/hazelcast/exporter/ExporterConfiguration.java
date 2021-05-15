@@ -20,6 +20,11 @@ public class ExporterConfiguration {
   private String enabledValueTypes = "";
   private String enabledRecordTypes = "";
 
+  /**
+   * 指定 members
+   */
+  private String members;
+
   public int getPort() {
     return getEnv("PORT").map(Integer::parseInt).orElse(port);
   }
@@ -46,6 +51,14 @@ public class ExporterConfiguration {
 
   public String getEnabledRecordTypes() {
     return getEnv("ENABLED_RECORD_TYPES").orElse(enabledRecordTypes);
+  }
+
+  public String getMembers() {
+    return members;
+  }
+
+  public void setMembers(String members) {
+    this.members = members;
   }
 
   public Optional<String> getRemoteAddress() {
@@ -76,6 +89,8 @@ public class ExporterConfiguration {
             + timeToLiveInSeconds
             + ", format="
             + format
+            + ", members="
+            + members
             + "]";
   }
 }

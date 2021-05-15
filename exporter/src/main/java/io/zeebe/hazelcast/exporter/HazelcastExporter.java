@@ -1,9 +1,10 @@
 package io.zeebe.hazelcast.exporter;
 
+import com.google.common.base.MoreObjects;
+import com.google.common.base.Splitter;
 import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;
-import com.hazelcast.config.Config;
-import com.hazelcast.config.RingbufferConfig;
+import com.hazelcast.config.*;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.ringbuffer.Ringbuffer;
@@ -15,9 +16,14 @@ import io.zeebe.exporter.proto.RecordTransformer;
 import io.zeebe.exporter.proto.Schema;
 import org.slf4j.Logger;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.Objects;
 import java.util.function.Function;
 
 public class HazelcastExporter implements Exporter {
+
+  private static final Splitter COMA = Splitter.on(',').trimResults();
 
   private ExporterConfiguration config;
   private Logger logger;
@@ -87,6 +93,37 @@ public class HazelcastExporter implements Exporter {
 
     final var hzConfig = new Config();
     hzConfig.getNetworkConfig().setPort(port);
+
+    final NetworkConfig network = hzConfig.getNetworkConfig();
+
+    // 关闭广播模式
+    final JoinConfig join = network.getJoin();
+    final MulticastConfig multicast = join.getMulticastConfig();
+    multicast.setEnabled(false);
+
+    // 设置固定 ip
+    final TcpIpConfig tcpIp = join.getTcpIpConfig();
+    tcpIp.setEnabled(true);
+    for(final String member : COMA.splitToList(config.getMembers())) {
+      InetAddress[] addresses = null;
+      try {
+        addresses = MoreObjects.firstNonNull(
+                InetAddress.getAllByName(member),
+                new InetAddress[0]);
+      } catch (UnknownHostException e) {
+        logger.error("[Hazelcast] Init Error, member={}, e={}", member, e);
+      }
+
+      if (Objects.nonNull(addresses)) {
+        for (final InetAddress addr : addresses) {
+          final String hostAddress = addr.getHostAddress();
+          tcpIp.addMember(hostAddress);
+          logger.info("[Hazelcast] New Member: " + hostAddress);
+        }
+      }
+    }
+
+
     hzConfig.setProperty("hazelcast.logging.type", "slf4j");
 
     final var ringbufferConfig = new RingbufferConfig(this.config.getName());
